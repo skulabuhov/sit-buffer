@@ -5,6 +5,10 @@
     <title>SIT Buffer</title>
     <!-- Viewport Meta Tag -->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!-- Manifest Link for PWA -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Theme Color for PWA -->
+    <meta name="theme-color" content="#121212">
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <!-- FontAwesome CDN -->
@@ -216,6 +220,18 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- jQuery UI for Drag and Drop -->
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<!-- Register Service Worker for PWA -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+</script>
 <script>
     // Application Data
     let appData = {
