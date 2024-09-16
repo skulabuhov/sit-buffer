@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>SIT Buffer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- Viewport Meta Tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <!-- FontAwesome CDN -->
@@ -19,9 +20,15 @@
             align-items: center;
             justify-content: space-between;
             margin-top: 20px;
+            flex-wrap: nowrap; /* Keep items in one row */
         }
         .header-row h4 {
             margin: 0;
+            white-space: nowrap;
+        }
+        .nav-tabs {
+            overflow-x: auto;
+            white-space: nowrap;
         }
         .nav-tabs .nav-link.active {
             background-color: #1f1f1f;
@@ -92,6 +99,7 @@
             border: none;
             padding: 6px 12px;
             border-radius: 4px;
+            white-space: nowrap;
         }
         .add-tab-btn:hover {
             background-color: #1f1f1f;
@@ -128,12 +136,16 @@
             .drag-handle {
                 margin-right: 10px;
             }
+            /* Ensure header stays in one row */
             .header-row {
-                flex-direction: column;
-                align-items: flex-start;
+                flex-wrap: nowrap;
+                overflow-x: auto;
             }
             .add-tab-btn {
-                margin-top: 10px;
+                flex-shrink: 0;
+            }
+            .header-row h4 {
+                flex-shrink: 0;
             }
             .tab-buttons {
                 flex-direction: column;
@@ -354,13 +366,16 @@
                 alert('Cannot remove the Main tab.');
                 return;
             }
-            appData.tabs = appData.tabs.filter(t => t.id !== tabId);
-            saveData();
-            renderTabs();
-            // Activate the first tab
-            if (appData.tabs.length > 0) {
-                $(`#tabList li[data-tab-id="${appData.tabs[0].id}"] a`).tab('show');
-                currentTabId = appData.tabs[0].id;
+            // Confirm Deletion
+            if (confirm('Are you sure you want to delete this tab?')) {
+                appData.tabs = appData.tabs.filter(t => t.id !== tabId);
+                saveData();
+                renderTabs();
+                // Activate the first tab
+                if (appData.tabs.length > 0) {
+                    $(`#tabList li[data-tab-id="${appData.tabs[0].id}"] a`).tab('show');
+                    currentTabId = appData.tabs[0].id;
+                }
             }
         });
 
@@ -414,9 +429,12 @@
             event.stopPropagation();
             const elementIndex = $(this).closest('.element-row').attr('data-element-index');
             const tab = appData.tabs.find(t => t.id === currentTabId);
-            tab.elements.splice(elementIndex, 1);
-            saveData();
-            renderElements(currentTabId);
+            // Confirm Deletion
+            if (confirm('Are you sure you want to delete this item?')) {
+                tab.elements.splice(elementIndex, 1);
+                saveData();
+                renderElements(currentTabId);
+            }
         });
 
         // Copy Element Text by Clicking on Element Row (excluding icons)
